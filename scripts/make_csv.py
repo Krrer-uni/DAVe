@@ -3,7 +3,7 @@ import collections
 import pandas as pd
 import re
 
-package_name = "julia"
+package_name = "cmake"
 
 
 def find_dependencies(package_name: str) -> []:
