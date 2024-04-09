@@ -1,12 +1,13 @@
 #!/bin/bash
 
-cd ../
+SCRIPT_DIR="$(dirname "$0")"
 
-rm data/packages -r
-rm data/dump -r
-mkdir data/packages data/dump data/csv
-unzip data/homebrew_dataset.zip -d data/dump
-for folder in data/dump/* ;
-do
-  cp "${folder}"/*.rb data/packages/
+cd "$SCRIPT_DIR/../data"
+
+rm packages -r
+rm dump -r
+mkdir packages dump csv
+unzip homebrew_dataset.zip -d dump
+for folder in dump/* ; do
+  cp "${folder}"/*.rb packages/
 done
