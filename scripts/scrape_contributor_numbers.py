@@ -28,14 +28,19 @@ def get_contributors_count(repo_url):
     if response.status_code != 200:
         raise requests.HTTPError("Failed to retrieve repository page.")
     soup = BeautifulSoup(response.text, 'html.parser')
-    contributors_count_element = soup.find(
+    contributors_count_elements = soup.find_all(
         'a', href=f"/{repo_owner}/{repo_name}/graphs/contributors"
     )
-    if contributors_count_element is None:
+    if len(contributors_count_elements) == 0:
         raise ValueError("Contributors count not found.")
     num_contributors_text = (
-        contributors_count_element.find('span').text.strip())
-    num_contributors = text_to_integer(num_contributors_text)
+        contributors_count_elements[0].find('span').text.strip())
+    num_contributors = 0
+    if num_contributors_text[-1] == '+':
+        num_contributors_text = (
+            contributors_count_elements[1].get_text(strip=True)[2:-13])
+        num_contributors += 14
+    num_contributors += text_to_integer(num_contributors_text)
     return num_contributors
 
 
@@ -49,7 +54,8 @@ def main():
     try:
         repo_urls = [
             "https://github.com/Kitware/CMake",
-            "https://github.com/psf/requests"
+            "https://github.com/psf/requests",
+            "https://github.com/Homebrew/homebrew-core"
         ]
         contributors_counts = get_contributors_counts(repo_urls)
         print(contributors_counts)
