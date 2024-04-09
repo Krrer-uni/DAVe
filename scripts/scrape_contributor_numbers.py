@@ -32,14 +32,47 @@ def text_to_integer(text: str) -> int:
         raise ValueError("Error: Unable to contributor number text to integer.")
 
 
+def find_contributors_count(contributors_count_elements) -> str:
+    for element in contributors_count_elements:
+        if element.find("span") is not None:
+            return element.find("span").text.strip()
+    # num_contributors_text = contributors_count_elements[0].find("span").text.strip()
+
+
+def extract_contributors_count(
+    num_contributors_text: str, contributors_count_elements
+) -> int | None:
+    num_contributors: int = 0
+
+    if num_contributors_text[-1] == "+":
+        num_contributors_text = contributors_count_elements[1].get_text(strip=True)[
+            2:-13
+        ]
+        num_contributors += 14
+
+    try:
+        return text_to_integer(num_contributors_text)
+    except ValueError as error:
+        print(f"Error: {error}")
+
+    return None
+
+
 def get_contributors_count(repo_url: str) -> int | None:
     if "github.com" not in repo_url:
         print("Error: Repository URL is not from GitHub.")
         return None
 
     repo_owner, repo_name = get_repo_owner_and_name(repo_url)
+    print(repo_url)
 
-    response = requests.get(repo_url)
+    try:
+        response = requests.get(repo_url)
+    except requests.exceptions.RequestException as error:
+        print("Request failed.")
+        print(f"Error: {error}")
+        return None
+
     if response.status_code != 200:
         print(f"Failed to retrieve repository page for {repo_url}.")
         return None
@@ -58,21 +91,12 @@ def get_contributors_count(repo_url: str) -> int | None:
         print(f"Contributors count not found for {repo_url}.")
         return None
 
-    num_contributors_text = contributors_count_elements[0].find("span").text.strip()
-    num_contributors = 0
+    num_contributors_text = find_contributors_count(contributors_count_elements)
 
-    if num_contributors_text[-1] == "+":
-        num_contributors_text = contributors_count_elements[1].get_text(strip=True)[
-            2:-13
-        ]
-        num_contributors += 14
-    try:
-        num_contributors = text_to_integer(num_contributors_text)
-    except ValueError as error:
-        print(f"Error: {error}")
-        return None
-
-    # print(f"{repo_url}: {num_contributors}")
+    num_contributors = extract_contributors_count(
+        num_contributors_text, contributors_count_elements
+    )
+    print(f"Number of contributors: {num_contributors}")
     return num_contributors
 
 
