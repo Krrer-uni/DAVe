@@ -55,7 +55,8 @@ def main():
         repo_urls = [
             "https://github.com/Kitware/CMake",
             "https://github.com/psf/requests",
-            "https://github.com/Homebrew/homebrew-core"
+            "https://github.com/Homebrew/homebrew-core",
+            "https://github.com/Krrer-uni/DAVe"
         ]
         contributors_counts = get_contributors_counts(repo_urls)
         print(contributors_counts)
