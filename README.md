@@ -1,7 +1,15 @@
-#### DAVe - Dependency Atack VEctor finder
+# DAVe - Dependency Atack VEctor finder
 
-usage:
-from root directory run:
-unpack and organize data
+## Usage
+
+To unpack run from project root directory:
+
 ```bash
-sh scripts/make_csv.py```
+./scripts/unpack.sh
+```
+
+Organize data
+
+```bash
+python scripts/make_csv.py
+```
