@@ -1,3 +1,4 @@
 data/csv/
 data/packages/
 data/dump/
+.venv
