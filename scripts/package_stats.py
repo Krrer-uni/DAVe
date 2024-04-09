@@ -39,13 +39,31 @@ def get_stats_for_package(pkg):
     return pkg, head, install_count, on_request_count
 
 
+def column_to_int_coerce(column: pd.Series) -> pd.Series:
+    return pd.to_numeric(column.str.replace(",", ""), errors="coerce")
+
+
 packages = os.listdir(str(packages_dir))
 packages = [p[:-3] for p in packages]  # Strip the ".rb" suffix
 packages = [get_stats_for_package(p) for p in packages]
 
-df = pd.DataFrame(packages)
+df = pd.DataFrame(
+    packages,
+)
+
 df.rename(
     columns={0: "package", 1: "repo_url", 2: "install", 3: "install-on-request"},
     inplace=True,
 )
-df.to_csv(csv_dir / "package_stats.csv", index=False)
+
+
+df["install"] = column_to_int_coerce(df["install"]).astype("Int64")
+df["install-on-request"] = column_to_int_coerce(df["install-on-request"]).astype(
+    "Int64"
+)
+
+
+df.to_csv(
+    csv_dir / "package_stats.csv",
+    index=False,
+)
