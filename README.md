@@ -11,5 +11,5 @@ To unpack run from project root directory:
 Organize data
 
 ```bash
-python scripts/make_csv.py
+python3 ./scripts/make_dependency_graph.py
 ```
