@@ -2,16 +2,20 @@
 
 ## Usage
 
-To unpack run from project root directory:
+Firstly unpack the dataset. Run from project root dir:
 
 ```bash
 ./scripts/unpack.sh
 ```
 
-Organize data
+To get dependency graph data: (output in `data/csv/dependencies.csv`)
 
 ```bash
 python3 ./scripts/make_dependency_graph.py
 ```
 
-This script saves the output to `data/csv/dependencies.csv`
+To get package stats: (output in `data/csv/package_stats.csv`)
+
+```bash
+python3 ./scripts/package_stats.py
+```
