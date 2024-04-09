@@ -14,4 +14,4 @@ Organize data
 python3 ./scripts/make_dependency_graph.py
 ```
 
-This script saves the output to `data/dependencies.csv`
+This script saves the output to `data/csv/dependencies.csv`

@@ -1,23 +1,17 @@
 import collections
 import os
 import re
-from pathlib import Path
 
 import pandas as pd
 
-script_dir = os.path.dirname(__file__)
-data_dir = Path(script_dir).parent / "data"
-
 
 def find_dependencies(package_name: str) -> list[str]:
-    filename = os.path.join(data_dir, "packages", f"{package_name}.rb")
-    dependencies = []
+    filename = os.path.join("..", "data", "packages", f"{package_name}.rb")
+    dependencies: list[str] = []
     try:
         with open(filename, "r") as file:
             for line_number, line in enumerate(file, start=1):
-                if ":build" in line or ":test" in line:
-                    continue  # Skip dependencies that end users don't need
-                prefix = re.search('(depends_on ")|(uses_from_macos ")', line)
+                prefix = re.search(' *depends_on "', line)
                 if prefix:
                     start = line[prefix.end() :]
                     suffix = re.search('"', start)
@@ -53,27 +47,4 @@ def get_csv(package_name: str):
     processed, relations = get_dependency_tree(package_name)
     df = pd.DataFrame(list(relations))
     df.rename(columns={0: "package", 1: "dependency"}, inplace=True)
-
-    csv_path = os.path.join(data_dir, "csv", f"{package_name}.csv")
-    df.to_csv(csv_path, index=False)
-
-
-def get_full_csv():
-    packages_dir = os.path.join(data_dir, "packages")
-    packages = os.listdir(packages_dir)
-    packages = [p[:-3] for p in packages]  # strip ".rb"
-    relations = []
-    for pkg in packages:
-        deps = find_dependencies(pkg)
-        for d in deps:
-            relations.append((pkg, d))
-
-    df = pd.DataFrame(list(relations))
-    df.rename(columns={0: "package", 1: "dependency"}, inplace=True)
-    csv_path = os.path.join(data_dir, "csv", "dependencies.csv")
-    df.to_csv(csv_path, index=False)
-    print("CSV file created at", csv_path)
-
-
-if __name__ == "__main__":
-    get_full_csv()
+    df.to_csv("../data/csv/" + package_name + ".csv", index=False)
