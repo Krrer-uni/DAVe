@@ -76,4 +76,10 @@ def get_full_csv():
 
 
 if __name__ == "__main__":
-    get_full_csv()
+    # get_full_csv()
+    get_csv("julia")
+    get_csv("opencv")
+    get_csv("rtabmap")
+    get_csv("mlt")
+    get_csv("octave")
+
