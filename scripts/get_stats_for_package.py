@@ -1,6 +1,6 @@
 import sys
 
-from scripts.make_dependency_graph import get_csv
+from make_dependency_graph import get_csv
 
 
 if __name__ == "__main__":
